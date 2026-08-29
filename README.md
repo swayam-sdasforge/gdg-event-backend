@@ -80,6 +80,22 @@ Because this project uses Docker, you do not need Node.js or Postgres installed 
 
 ---
 
+## 🚧 Challenges Faced & Solutions
+
+1. **Containerized Build Failures (Node Versioning):** 
+   * *Challenge:* When writing the multi-stage Dockerfile for the frontend, the Vite build pipeline requires strict ES module support and Node 20+, which caused initial build failures in standard lightweight images.
+   * *Solution:* I explicitly engineered the builder stage to use `node:20-alpine`. This ensured the environment flawlessly compiled the React code while maintaining a tiny container footprint.
+
+2. **Real-Time Chat History Syncing:**
+   * *Challenge:* WebSockets (`Socket.io`) are inherently ephemeral. If an Organizer logged in *after* a Participant sent a message, the Organizer would not see it because the event had already been broadcasted.
+   * *Solution:* I hybridized the architecture. While WebSockets handle live broadcasting, every message is simultaneously committed to the PostgreSQL database. When a user opens the chat, React fetches the historical data via a REST API, ensuring zero data loss.
+
+3. **Container Race Conditions:**
+   * *Challenge:* During local orchestration, the Node.js backend would crash on startup because it booted faster than the PostgreSQL database could initialize its network socket and accept connections.
+   * *Solution:* I implemented strict container lifecycle hooks in `docker-compose.yml`. By utilizing `pg_isready` as a `healthcheck`, the backend container is forced to wait in a suspended state until the database gives the green light.
+
+---
+
 ## Database Schema
 *   `Users` (id, name, email, password_hash, role)
 *   `Submissions` (id, participant_id, judge_id, project_url, score, feedback)
