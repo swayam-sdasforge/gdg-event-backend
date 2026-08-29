@@ -11,6 +11,18 @@ This repository contains the backend (and connected frontend) for the GDG VIT Ch
 
 ---
 
+## 🌍 Live API Deployment (For Judging)
+
+The backend REST API and PostgreSQL database have been deployed to the cloud for live testing.
+* **Base API URL:** `https://gdg-event-backend.onrender.com`
+* *(Note: Visiting the root URL in a browser will return `Cannot GET /` as it is a REST API. Please use an HTTP client like Postman to interact with the endpoints).*
+
+**Test Credentials (Pre-seeded Organizer/Admin):**
+* **Email:** `admin@gdg.com`
+* **Password:** `password123`
+
+---
+
 ## System Architecture & Tech Stack
 
 *   **Backend:** Node.js, Express.js
